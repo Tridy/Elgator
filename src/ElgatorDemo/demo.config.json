@@ -1,0 +1,9 @@
+// IP_ADDRESS is the address of your Elgato lamp
+// the PORT is usually 9123
+{
+  "Url": "http://IP_ADDRESS:PORT",
+  "MinBrightness": 0,
+  "MaxBrightness": 100,
+  "MinTemperature": 143,
+  "MaxTemperature": 344
+}
