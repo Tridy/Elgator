@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
+using Elgator;
 
 namespace ElgatoCommands
 {
@@ -8,11 +9,13 @@ namespace ElgatoCommands
     {
         private static Elgator.Elgator _elgator;
 
+        private static Configuration _configuration;
+
         static async Task Main(string[] args)
         {
-            IConfigurationRoot configuration = GetConfiguration();
+            _configuration = GetConfiguration();
 
-            _elgator = Elgator.Elgator.FromConfiguration(configuration);
+            _elgator = Elgator.Elgator.FromConfiguration(_configuration);
 
             Elgator.AccessoryInfo info = await _elgator.GetAccessoryInfo().ConfigureAwait(false);
 
@@ -43,19 +46,23 @@ namespace ElgatoCommands
             Console.ReadKey();
         }
 
-        private static IConfigurationRoot GetConfiguration()
+        private static Configuration GetConfiguration()
         {
-            return new ConfigurationBuilder()
+            var conf = new ConfigurationBuilder()
                 .AddJsonFile("demo.config.json")
                 .AddJsonFile("demo.config.local.json", optional: true)
                 .Build();
+
+            var configuration = Configuration.FromConfiguration(conf);
+
+            return configuration;
         }
 
         private static async Task LoopBrightness()
         {
-            for (int i = 0; i < 100; i += 10)
+            for (int i = _configuration.MinBrightness ; i <= _configuration.MaxBrightness; i += 10)
             {
-                await _elgator.SetBrightness(i).ConfigureAwait(false);
+                _elgator.SetBrightness(i);
                 await Task.Delay(200).ConfigureAwait(false);
             }
         }
@@ -72,16 +79,14 @@ namespace ElgatoCommands
 
         private static async Task LoopTemperature()
         {
-            //  143(7000K) to 344(2900K)
-
-            for (int i = 143; i < 344; i += 10)
+            for (int i = _configuration.MinTemperature; i < _configuration.MaxTemperature; i += 10)
             {
-                if (i == 344 - 1)
+                if (i == _configuration.MaxTemperature - 1)
                 {
-                    i = 344;
+                    i = _configuration.MaxTemperature;
                 }
 
-                await _elgator.SetTemperature(i).ConfigureAwait(false);
+                _elgator.SetTemperature(i);
 
                 await Task.Delay(100).ConfigureAwait(false);
             }

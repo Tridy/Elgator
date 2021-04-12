@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElgatorDemo", "ElgatorDemo\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elgator.UnitTests", "Elgator.UnitTests\Elgator.UnitTests.csproj", "{DBBF7A30-BBEA-4AB1-BF86-0A8E7D684A09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elgator.UI", "Elgator.UI\Elgator.UI.csproj", "{0CB4A122-E11A-4DEB-A7B3-B0CE431A7838}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{DBBF7A30-BBEA-4AB1-BF86-0A8E7D684A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBBF7A30-BBEA-4AB1-BF86-0A8E7D684A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBBF7A30-BBEA-4AB1-BF86-0A8E7D684A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CB4A122-E11A-4DEB-A7B3-B0CE431A7838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CB4A122-E11A-4DEB-A7B3-B0CE431A7838}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CB4A122-E11A-4DEB-A7B3-B0CE431A7838}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CB4A122-E11A-4DEB-A7B3-B0CE431A7838}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

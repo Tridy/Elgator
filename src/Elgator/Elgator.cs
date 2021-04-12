@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Refit;
+﻿using Refit;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Elgator
@@ -10,29 +11,46 @@ namespace Elgator
 
         private Configuration _configuration;
 
-        private Elgator(IConfiguration configuration)
-        {
-            InitializeConfiguration(configuration);
+        private System.Timers.Timer _timer;
 
+        private Elgator(Configuration configuration)
+        {
+            _configuration = configuration;
             var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer());
             _elgato = RestService.For<IElgato>(_configuration.Url, refitSettings);
+
+            StartTimer();
         }
 
-        private void InitializeConfiguration(IConfiguration configuration)
+        private void StartTimer()
         {
-            _configuration = new Configuration
+            _timer = new System.Timers.Timer();
+            _timer.Interval = _configuration.UpdateInMilliseconds;
+            _timer.Elapsed += OnTimerTick;
+            _timer.AutoReset = true;
+            _timer.Start();
+        }
+
+        private void OnTimerTick(object sender, EventArgs e)
+        {
+            if(_newBrightness != _currentBrightness)
             {
-                Url = configuration["Url"],
-                MinBrightness = int.Parse(configuration["MinBrightness"]),
-                MaxBrightness = int.Parse(configuration["MaxBrightness"]),
-                MinTemperature = int.Parse(configuration["MinTemperature"]),
-                MaxTemperature= int.Parse(configuration["MaxTemperature"]),
-            };
+                _currentBrightness = _newBrightness;
+                // Debug.WriteLine("B: " + _newBrightness);
+                SetBrightnessValue(_newBrightness).GetAwaiter().GetResult();
+            }
+
+            if(_newTemperature != _currentTemperature)
+            {
+                _currentTemperature = _newTemperature;
+                // Debug.WriteLine("T: " + _newTemperature);
+                SetTemperatureValue(_newTemperature).GetAwaiter().GetResult();
+            }
         }
 
-        public static Elgator FromConfiguration(IConfiguration configuration)
+        public static Elgator FromConfiguration(Configuration configuration)
         {
-            
+
             return new Elgator(configuration);
         }
 
@@ -42,9 +60,47 @@ namespace Elgator
             return accessoryInfo;
         }
 
-        public async Task SetBrightness(int i)
+
+        private int _currentBrightness;
+        private int _currentTemperature;
+
+        private int _newBrightness;
+        private int _newTemperature;
+
+        public void SetBrightness(int brightness)
         {
-            await SetBrightnessValue(i).ConfigureAwait(false);
+            if (brightness < _configuration.MinBrightness)
+            {
+                brightness = _configuration.MinBrightness;
+            }
+
+            if (brightness > _configuration.MaxBrightness)
+            {
+                brightness = _configuration.MaxBrightness;
+            }
+
+            if(brightness != _currentBrightness)
+            {
+                _newBrightness = brightness;
+            }
+        }
+
+        public void SetTemperature(int temperature)
+        {
+            if (temperature < _configuration.MinTemperature)
+            {
+                temperature = _configuration.MinTemperature;
+            }
+
+            if (temperature > _configuration.MaxTemperature)
+            {
+                temperature = _configuration.MaxTemperature;
+            }
+
+            if(temperature != _currentTemperature)
+            {
+                _newTemperature = temperature;
+            }
         }
 
         public async Task SetOn()
@@ -76,43 +132,8 @@ namespace Elgator
             return result;
         }
 
-        private async Task<StateChangeResult> SetBrightnessValue(int brightness)
+        private async Task<StateChangeResult> SetTemperatureValue(int temperature)
         {
-            if(brightness < _configuration.MinBrightness)
-            {
-                brightness = _configuration.MinBrightness;
-            }
-
-            if(brightness > _configuration.MaxBrightness)
-            {
-                brightness = _configuration.MaxBrightness;
-            }
-
-            var state = new StateInfo<Brightness>
-            {
-                NumberOfLights = 1,
-                Changes = new[] { new Brightness { Value = brightness } }
-            };
-
-            var jsonState = System.Text.Json.JsonSerializer.Serialize(state);
-
-            StateChangeResult result = await _elgato.SetState(jsonState).ConfigureAwait(false);
-
-            return result;
-        }
-
-        public async Task<StateChangeResult> SetTemperature(int temperature)
-        {
-            if(temperature < _configuration.MinTemperature)
-            {
-                temperature = _configuration.MinTemperature;
-            }
-
-            if(temperature > _configuration.MaxTemperature)
-            {
-                temperature = _configuration.MaxTemperature;
-            }
-
             var state = new StateInfo<Temperature>
             {
                 NumberOfLights = 1,
@@ -125,5 +146,20 @@ namespace Elgator
 
             return result;
         }
+
+        private async Task<StateChangeResult> SetBrightnessValue(int brightness)
+        {
+            var state = new StateInfo<Brightness>
+            {
+                NumberOfLights = 1,
+                Changes = new[] { new Brightness { Value = brightness } }
+            };
+
+            var jsonState = System.Text.Json.JsonSerializer.Serialize(state);
+
+            StateChangeResult result = await _elgato.SetState(jsonState).ConfigureAwait(false);
+
+            return result;
+        } 
     }
 }

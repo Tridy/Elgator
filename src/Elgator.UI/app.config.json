@@ -6,5 +6,5 @@
   "MaxBrightness": 100,
   "MinTemperature": 143,
   "MaxTemperature": 344,
-  "UpdateInMilliseconds" : 100
+  "UpdateInMilliseconds": 1000
 }
