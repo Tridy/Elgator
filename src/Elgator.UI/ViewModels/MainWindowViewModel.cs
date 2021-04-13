@@ -1,8 +1,5 @@
-﻿using Avalonia.Threading;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using ReactiveUI;
-using System;
-using System.Diagnostics;
 using System.Reactive;
 
 namespace Elgator.UI.ViewModels
@@ -79,7 +76,6 @@ namespace Elgator.UI.ViewModels
         public int MaxTemperature => _configuration.MaxTemperature;
         public int MinBrightness => _configuration.MinBrightness;
         public int MaxBrightness => _configuration.MaxBrightness;
-
 
         public string Greeting => _greeting;
     }

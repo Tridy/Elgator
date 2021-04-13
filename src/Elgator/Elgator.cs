@@ -1,6 +1,5 @@
 ﻿using Refit;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Elgator
@@ -33,24 +32,21 @@ namespace Elgator
 
         private void OnTimerTick(object sender, EventArgs e)
         {
-            if(_newBrightness != _currentBrightness)
+            if (_newBrightness != _currentBrightness)
             {
                 _currentBrightness = _newBrightness;
-                // Debug.WriteLine("B: " + _newBrightness);
                 SetBrightnessValue(_newBrightness).GetAwaiter().GetResult();
             }
 
-            if(_newTemperature != _currentTemperature)
+            if (_newTemperature != _currentTemperature)
             {
                 _currentTemperature = _newTemperature;
-                // Debug.WriteLine("T: " + _newTemperature);
                 SetTemperatureValue(_newTemperature).GetAwaiter().GetResult();
             }
         }
 
         public static Elgator FromConfiguration(Configuration configuration)
         {
-
             return new Elgator(configuration);
         }
 
@@ -59,7 +55,6 @@ namespace Elgator
             var accessoryInfo = await _elgato.GetAccessoryInfo().ConfigureAwait(false);
             return accessoryInfo;
         }
-
 
         private int _currentBrightness;
         private int _currentTemperature;
@@ -79,7 +74,7 @@ namespace Elgator
                 brightness = _configuration.MaxBrightness;
             }
 
-            if(brightness != _currentBrightness)
+            if (brightness != _currentBrightness)
             {
                 _newBrightness = brightness;
             }
@@ -97,7 +92,7 @@ namespace Elgator
                 temperature = _configuration.MaxTemperature;
             }
 
-            if(temperature != _currentTemperature)
+            if (temperature != _currentTemperature)
             {
                 _newTemperature = temperature;
             }
@@ -160,6 +155,6 @@ namespace Elgator
             StateChangeResult result = await _elgato.SetState(jsonState).ConfigureAwait(false);
 
             return result;
-        } 
+        }
     }
 }

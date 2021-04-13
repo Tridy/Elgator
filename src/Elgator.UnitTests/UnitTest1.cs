@@ -7,7 +7,6 @@ namespace Elgator.UnitTests
         [Fact]
         public void Test1()
         {
-          
         }
     }
 }

@@ -1,7 +1,7 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Elgator.UI.ViewModels;
+using System;
 
 namespace Elgator.UI
 {
@@ -16,11 +16,11 @@ namespace Elgator.UI
 
             if (type != null)
             {
-                return (Control) Activator.CreateInstance(type)!;
+                return (Control)Activator.CreateInstance(type)!;
             }
             else
             {
-                return new TextBlock {Text = "Not Found: " + name};
+                return new TextBlock { Text = "Not Found: " + name };
             }
         }
 

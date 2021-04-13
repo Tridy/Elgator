@@ -1,17 +1,17 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Elgator;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
-using Elgator;
 
 namespace ElgatoCommands
 {
-    class Program
+    internal class Program
     {
         private static Elgator.Elgator _elgator;
 
         private static Configuration _configuration;
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             _configuration = GetConfiguration();
 
@@ -60,7 +60,7 @@ namespace ElgatoCommands
 
         private static async Task LoopBrightness()
         {
-            for (int i = _configuration.MinBrightness ; i <= _configuration.MaxBrightness; i += 10)
+            for (int i = _configuration.MinBrightness; i <= _configuration.MaxBrightness; i += 10)
             {
                 _elgator.SetBrightness(i);
                 await Task.Delay(200).ConfigureAwait(false);
