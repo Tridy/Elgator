@@ -22,6 +22,7 @@
 			<GradientStop Offset="1" Color="#FFFFFF" />
 		</LinearGradientBrush>
 
+		<converters:ThumbColorConverter x:Key="temperatureColorConverter"/>
 		<converters:ThumbColorConverter x:Key="thumbColorConverter"/>
 
 	</Window.Resources>
