@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ReactiveUI;
+using System;
 using System.Reactive;
+using System.Threading.Tasks;
 
 namespace Elgator.UI.ViewModels
 {
@@ -15,29 +17,35 @@ namespace Elgator.UI.ViewModels
 
         private string _greeting;
 
-        public ReactiveCommand<Unit, Unit> OnCommand { get; }
-        public ReactiveCommand<Unit, Unit> OffCommand { get; }
+        private bool _isOn;
+
+        public ReactiveCommand<bool, Unit> OnCommand { get; }
 
         public MainWindowViewModel()
         {
             _configuration = GetConfiguration();
 
-            OnCommand = ReactiveCommand.Create(OnOnCommand);
-            OffCommand = ReactiveCommand.Create(OnOffCommand);
-
             _elgator = Elgator.FromConfiguration(_configuration);
             var info = _elgator.GetAccessoryInfo().ConfigureAwait(false).GetAwaiter().GetResult();
             _greeting = info.Name;
+            var state = _elgator.GetState().ConfigureAwait(false).GetAwaiter().GetResult();
+            _isOn = state.Lights[0].IsOn == 1;
+
+            OnCommand = ReactiveCommand.CreateFromTask<bool, Unit>(OnOnCommand);
         }
 
-        private void OnOffCommand()
+        private async Task<Unit> OnOnCommand(bool isOn)
         {
-            _elgator.SetOff().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
+            if (isOn)
+            {
+                await _elgator.SetOn().ConfigureAwait(false);
+            }
+            else
+            {
+                await _elgator.SetOff().ConfigureAwait(false);
+            }
 
-        private void OnOnCommand()
-        {
-            _elgator.SetOn().ConfigureAwait(false).GetAwaiter().GetResult();
+            return Unit.Default;
         }
 
         private static Configuration GetConfiguration()
@@ -50,6 +58,17 @@ namespace Elgator.UI.ViewModels
             var configuration = Configuration.FromConfiguration(config);
 
             return configuration;
+        }
+
+        public bool IsOn
+        {
+            get => _isOn;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isOn, value);
+
+                
+            }
         }
 
         public int Brightness

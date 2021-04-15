@@ -12,6 +12,12 @@ namespace Elgator
 
         private System.Timers.Timer _timer;
 
+        private int _currentBrightness;
+        private int _currentTemperature;
+
+        private int _newBrightness;
+        private int _newTemperature;
+
         private Elgator(Configuration configuration)
         {
             _configuration = configuration;
@@ -55,12 +61,6 @@ namespace Elgator
             var accessoryInfo = await _elgato.GetAccessoryInfo().ConfigureAwait(false);
             return accessoryInfo;
         }
-
-        private int _currentBrightness;
-        private int _currentTemperature;
-
-        private int _newBrightness;
-        private int _newTemperature;
 
         public void SetBrightness(int brightness)
         {
@@ -153,6 +153,21 @@ namespace Elgator
             var jsonState = System.Text.Json.JsonSerializer.Serialize(state);
 
             StateChangeResult result = await _elgato.SetState(jsonState).ConfigureAwait(false);
+
+            return result;
+        }
+
+        public async Task<StateChangeResult> GetState()
+        {
+            var state = new StateInfo<Brightness>
+            {
+                NumberOfLights = 1,
+                //Changes = new[] { new Brightness { Value = brightness } }
+            };
+
+            var jsonState = System.Text.Json.JsonSerializer.Serialize(state);
+
+            StateChangeResult result = await _elgato.GetState(jsonState).ConfigureAwait(false);
 
             return result;
         }
