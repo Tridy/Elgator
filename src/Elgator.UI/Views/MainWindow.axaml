@@ -1,42 +1,44 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Elgator.UI.ViewModels"
+		xmlns:views="using:Elgator.UI.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:converters="using:Elgator.UI.Converters"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Elgator.UI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Elgator"
-		SizeToContent="WidthAndHeight">
-
-	<Window.Resources>
-
-		<LinearGradientBrush x:Key="TemperatureBrush">
-			<GradientStop Offset="0" Color="#96D0EC" />
-			<GradientStop Offset="1" Color="#FEb166" />
-		</LinearGradientBrush>
-
-		<LinearGradientBrush x:Key="BrightnessBrush">
-			<GradientStop Offset="0" Color="#000000" />
-			<GradientStop Offset="1" Color="#FFFFFF" />
-		</LinearGradientBrush>
-
-		<converters:ThumbColorConverter x:Key="temperatureColorConverter"/>
-		<converters:ThumbColorConverter x:Key="thumbColorConverter"/>
-
-	</Window.Resources>
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaToDecorationsHint="True"
+		CanResize="False"
+		SizeToContent="WidthAndHeight"
+		Name="mainWindow">
 
 	<Window.Styles>
 
-		<Style Selector="Border.temperatureBorder">
-			<Setter Property="Background" Value="{StaticResource TemperatureBrush}"/>
+		<Style Selector="ListBox">
+			<Setter Property="Background" Value="Transparent"/>
 		</Style>
 
-		<Style Selector="Border.brightnessBorder">
-			<Setter Property="Background" Value="{StaticResource BrightnessBrush}"/>
+		<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
 		</Style>
-		
+
+		<Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected:focus /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected:focus:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
 	</Window.Styles>
 
 	<Design.DataContext>
@@ -44,117 +46,35 @@
 	</Design.DataContext>
 
 
+	<Grid ColumnDefinitions="*, Auto" Name="mainGrid">
 
-	<Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="10">
-		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<ListBox Background="Transparent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="deviceContainer" Items="{Binding Path=Devices}">
 
-		<ToggleSwitch Command="{Binding Path=OnCommand}"
-					  CommandParameter="{Binding Path=IsOn}" 
-					  IsChecked="{Binding Path=IsOn}" 
-					  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" OffContent="Power Off" OnContent="Power On"/>
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel Orientation="Vertical" HorizontalAlignment="Stretch"/>
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+
+			<ListBox.ItemTemplate>
+				<DataTemplate x:DataType="vm:DeviceViewModel" >
+					<views:DeviceView IsHitTestVisible="True"/>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<Button Grid.Row="0" Grid.Column="1"
+				Name="CloseButton"
+				VerticalAlignment="Top"
+				Height="20"
+				Width="20"
+				Background="red"
+				Padding="0" Margin="0,5,5,0" Opacity="0.3">
+			
+		</Button>
 		
-		<TextBlock Grid.Row="2" Grid.Column="0" Text="Temperature:"/>
-
-		<Slider Classes="temperature" Grid.Row="2" Grid.Column="1" 
-				Name="temperatureSlider"
-				Value="{Binding Path=Temperature, Mode=TwoWay}"
-				Minimum="{Binding Path=MinTemperature, Mode=OneWay}" Maximum="{Binding Path=MaxTemperature, Mode=OneWay}">
-
-			<Slider.Styles>
-
-				<Style Selector="Slider:horizontal">
-					<Setter Property="MinWidth" Value="40"/>
-					<Setter Property="MinHeight" Value="20"/>
-					<Setter Property="Template">
-						<ControlTemplate>
-							<Grid Name="grid">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto" MinHeight="20"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
-								<Border Classes="temperatureBorder" Name="TrackBackground" Grid.Row="1" Height="4" Margin="6,0" VerticalAlignment="Center" Tag="aaa"/>
-								<Track Name="PART_Track" Grid.Row="1" Orientation="Horizontal">
-									<Thumb Name="thumb" MinWidth="20" MinHeight="20">
-										<Thumb.Template>
-											<ControlTemplate>
-												<Ellipse Width="18" Height="18" StrokeThickness="1" Stroke="LightGray">
-
-													<Ellipse.Fill>
-														<MultiBinding Converter="{StaticResource thumbColorConverter}">
-															<Binding ElementName="TrackBackground" Path="Background"/>
-															<Binding ElementName="temperatureSlider" Path="Minimum"/>
-															<Binding ElementName="temperatureSlider" Path="Maximum"/>
-															<Binding ElementName="temperatureSlider" Path="Value"/>
-														</MultiBinding>
-													</Ellipse.Fill>
-
-												</Ellipse>
-											</ControlTemplate>
-										</Thumb.Template>
-									</Thumb>
-								</Track>
-							</Grid>
-						</ControlTemplate>
-					</Setter>
-				</Style>
-
-			</Slider.Styles>
-
-		</Slider>
-
-		<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=Temperature}" VerticalAlignment="Center" />
-
-		<TextBlock Grid.Row="3" Grid.Column="0" Text="Brightness:"/>
-		
-		<Slider Classes="brightness" Grid.Row="3" Grid.Column="1" Value="{Binding Path=Brightness, Mode=TwoWay}"
-				Name="brightnessSlider"
-				Minimum="{Binding Path=MinBrightness, Mode=OneWay}" Maximum="{Binding Path=MaxBrightness, Mode=OneWay}">
-
-			<Slider.Styles>
-
-				<Style Selector="Slider:horizontal">
-					<Setter Property="MinWidth" Value="40"/>
-					<Setter Property="MinHeight" Value="20"/>
-					<Setter Property="Template">
-						<ControlTemplate>
-							<Grid Name="grid">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto" MinHeight="20"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
-								<Border Classes="brightnessBorder" Name="TrackBackground" Grid.Row="1" Height="4" Margin="6,0" VerticalAlignment="Center"/>
-								<Track Name="PART_Track" Grid.Row="1" Orientation="Horizontal">
-									<Thumb Name="thumb" MinWidth="20" MinHeight="20">
-										<Thumb.Template>
-											<ControlTemplate>
-												<Ellipse Width="18" Height="18" StrokeThickness="1" Stroke="LightGray">
-													<Ellipse.Fill>
-														<MultiBinding Converter="{StaticResource thumbColorConverter}">
-															<Binding ElementName="TrackBackground" Path="Background"/>
-															<Binding ElementName="brightnessSlider" Path="Minimum"/>
-															<Binding ElementName="brightnessSlider" Path="Maximum"/>
-															<Binding ElementName="brightnessSlider" Path="Value"/>
-														</MultiBinding>
-													</Ellipse.Fill>
-												</Ellipse>
-											</ControlTemplate>
-										</Thumb.Template>
-									</Thumb>
-								</Track>
-							</Grid>
-						</ControlTemplate>
-					</Setter>
-				</Style>
-
-			</Slider.Styles>
-
-		</Slider>
-		
-		<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=Brightness}" VerticalAlignment="Center" />
-
-		<Button Grid.Row="4" Grid.Column="2" Content="Close"/>
 	</Grid>
+
+
 
 </Window>

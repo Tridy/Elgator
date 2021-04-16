@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Elgator
 {
-    public class Elgator
+    public class Elgator : IDisposable
     {
         private IElgato _elgato;
 
@@ -23,7 +23,14 @@ namespace Elgator
             _configuration = configuration;
             var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer());
             _elgato = RestService.For<IElgato>(_configuration.Url, refitSettings);
+        }
 
+        public void Start(StateChangeResult startingState)
+        {
+            _currentBrightness = startingState.Lights[0].Brightness;
+            _newBrightness = _currentBrightness;
+            _currentTemperature = startingState.Lights[0].Temperature;
+            _newTemperature = _currentTemperature;
             StartTimer();
         }
 
@@ -170,6 +177,13 @@ namespace Elgator
             StateChangeResult result = await _elgato.GetState(jsonState).ConfigureAwait(false);
 
             return result;
+        }
+
+        public void Dispose()
+        {
+            _timer?.Stop();
+            _timer?.Dispose();
+            _elgato = null;
         }
     }
 }

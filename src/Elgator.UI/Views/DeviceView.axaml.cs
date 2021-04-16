@@ -4,25 +4,20 @@ using Avalonia.Markup.Xaml;
 
 namespace Elgator.UI.Views
 {
-    public class MainWindow : Window
+    public class DeviceView : UserControl
     {
-        public MainWindow()
+        public DeviceView()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
 
-            Connector.HostWindow = this;
-
-            this.FindControl<Button>("CloseButton").Click += delegate
+            this.FindControl<Border>("mainBorder").PointerPressed += (i, e) =>
             {
-                Close();
+                Connector.HostWindow?.PlatformImpl?.BeginMoveDrag(e);
             };
         }
     }
