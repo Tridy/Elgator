@@ -24,9 +24,9 @@ namespace Elgator.UI.ViewModels
                 .AddJsonFile("app.config.local.json", optional: true)
                 .Build();
 
-            var configuration = Configuration.FromConfiguration(config);
+            var configurations = Configuration.FromConfiguration(config);
 
-            return new[] { configuration };
+            return configurations;
         }
     }
 }

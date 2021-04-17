@@ -1,6 +1,7 @@
 ﻿using Elgator;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElgatoCommands
@@ -53,9 +54,9 @@ namespace ElgatoCommands
                 .AddJsonFile("demo.config.local.json", optional: true)
                 .Build();
 
-            var configuration = Configuration.FromConfiguration(conf);
+            var configurations = Configuration.FromConfiguration(conf);
 
-            return configuration;
+            return configurations.ElementAt(0);
         }
 
         private static async Task LoopBrightness()
