@@ -5,11 +5,9 @@ using System.Linq;
 
 namespace Elgator.UI.ViewModels
 {
-
     public class MainWindowViewModel : ViewModelBase
     {
         public ObservableCollection<DeviceViewModel> Devices { get; private set; }
-
 
         public MainWindowViewModel()
         {
@@ -30,8 +28,5 @@ namespace Elgator.UI.ViewModels
 
             return new[] { configuration };
         }
-
-       
-
     }
 }

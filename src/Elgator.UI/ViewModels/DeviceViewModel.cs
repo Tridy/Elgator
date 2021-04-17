@@ -1,7 +1,6 @@
 ﻿using DynamicData.Binding;
 using ReactiveUI;
 using System;
-using System.Diagnostics;
 using System.Reactive;
 using System.Threading.Tasks;
 
@@ -55,7 +54,6 @@ namespace Elgator.UI.ViewModels
 
         public Configuration Configuration { get; set; }
 
-
         internal static DeviceViewModel FromConfiguration(Configuration configuration)
         {
             return new DeviceViewModel(configuration);
@@ -90,7 +88,6 @@ namespace Elgator.UI.ViewModels
                 {
                     _elgator.SetTemperature(changed.Value);
                 });
-
 
             this.WhenPropertyChanged(x => x.Brightness, notifyOnInitialValue: false)
                 .Subscribe(changed =>
