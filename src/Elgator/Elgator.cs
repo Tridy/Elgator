@@ -60,7 +60,7 @@ namespace Elgator
 
         public static Elgator FromConfiguration(Configuration configuration)
         {
-            return new Elgator(configuration);
+            return new Elgator(configuration?? throw new ArgumentNullException(nameof(configuration)));
         }
 
         public async Task<AccessoryInfo> GetAccessoryInfo()
