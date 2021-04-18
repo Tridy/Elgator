@@ -16,8 +16,18 @@ namespace ElgatoCommands
         {
             _configuration = GetConfiguration();
 
-            _elgator = Elgator.Elgator.FromConfiguration(_configuration);
+            using (_elgator = Elgator.Elgator.FromConfiguration(_configuration))
+            {
+                await Demo().ConfigureAwait(false);
+            }
 
+            Console.WriteLine("Any key to exit.");
+
+            Console.ReadKey();
+        }
+
+        private static async Task Demo()
+        {
             Elgator.AccessoryInfo info = await _elgator.GetAccessoryInfo().ConfigureAwait(false);
 
             Console.WriteLine("==========================================");
@@ -30,6 +40,8 @@ namespace ElgatoCommands
             Console.WriteLine($"{nameof(info.Features)}: { string.Join(',', info.Features)}");
             Console.WriteLine("==========================================");
 
+            _elgator.Start();
+
             await TurnOn().ConfigureAwait(false);
 
             await Task.Delay(1000).ConfigureAwait(false);
@@ -41,10 +53,6 @@ namespace ElgatoCommands
             await LoopTemperature().ConfigureAwait(false);
 
             await TurnOff().ConfigureAwait(false);
-
-            Console.WriteLine("Any key to exit.");
-
-            Console.ReadKey();
         }
 
         private static Configuration GetConfiguration()

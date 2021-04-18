@@ -78,7 +78,7 @@ namespace Elgator.UI.ViewModels
 
             SubscribeToChanges();
 
-            _elgator.Start(startingState);
+            _elgator.Start();
         }
 
         private void SubscribeToChanges()

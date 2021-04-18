@@ -25,8 +25,10 @@ namespace Elgator
             _elgato = RestService.For<IElgato>(_configuration.Url, refitSettings);
         }
 
-        public void Start(StateChangeResult startingState)
+        public void Start()
         {
+            StateChangeResult startingState = GetState().ConfigureAwait(false).GetAwaiter().GetResult();
+
             _currentBrightness = startingState.Lights[0].Brightness;
             _newBrightness = _currentBrightness;
             _currentTemperature = startingState.Lights[0].Temperature;
