@@ -39,6 +39,11 @@
 		<Style Selector="ListBoxItem:selected:focus:pointerover /template/ ContentPresenter">
 			<Setter Property="Background" Value="Transparent"/>
 		</Style>
+
+		<Style Selector="Button:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Red"/>
+		</Style>
+
 	</Window.Styles>
 
 	<Design.DataContext>
@@ -48,17 +53,19 @@
 
 	<Grid ColumnDefinitions="*, Auto" Name="mainGrid">
 
-		<ListBox Background="Transparent" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="deviceContainer" Items="{Binding Path=Devices}">
+		<ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+				 Items="{Binding Path=Devices}"
+				  >
 
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
-					<VirtualizingStackPanel Orientation="Vertical" HorizontalAlignment="Stretch"/>
+					<VirtualizingStackPanel Orientation="Vertical" />
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 
 			<ListBox.ItemTemplate>
 				<DataTemplate x:DataType="vm:DeviceViewModel" >
-					<views:DeviceView IsHitTestVisible="True"/>
+					<views:DeviceView IsHitTestVisible="True" />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
@@ -70,9 +77,9 @@
 				Width="20"
 				Background="red"
 				Padding="0" Margin="0,5,5,0" Opacity="0.3">
-			
+
 		</Button>
-		
+
 	</Grid>
 
 

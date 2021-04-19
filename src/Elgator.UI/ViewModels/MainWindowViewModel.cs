@@ -12,7 +12,6 @@ namespace Elgator.UI.ViewModels
         public MainWindowViewModel()
         {
             var configurations = GetConfigurations();
-
             var devices = configurations.Select(c => DeviceViewModel.FromConfiguration(c));
             Devices = new ObservableCollection<DeviceViewModel>(devices);
         }

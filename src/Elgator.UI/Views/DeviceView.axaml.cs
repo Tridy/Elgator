@@ -14,6 +14,11 @@ namespace Elgator.UI.Views
         {
             AvaloniaXamlLoader.Load(this);
 
+            AddWindowMouseDragHandling();
+        }
+
+        private void AddWindowMouseDragHandling()
+        {
             this.FindControl<Border>("mainBorder").PointerPressed += (i, e) =>
             {
                 Connector.HostWindow?.PlatformImpl?.BeginMoveDrag(e);
