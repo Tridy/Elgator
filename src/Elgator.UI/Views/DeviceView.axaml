@@ -1,0 +1,162 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+			 xmlns:converters="using:Elgator.UI.Converters"
+             x:Class="Elgator.UI.Views.DeviceView"
+			 Name="mainContol">
+
+	<UserControl.Resources>
+
+		<LinearGradientBrush x:Key="TemperatureBrush">
+			<GradientStop Offset="0" Color="#96D0EC" />
+			<GradientStop Offset="1" Color="#FEb166" />
+		</LinearGradientBrush>
+
+		<LinearGradientBrush x:Key="BrightnessBrush">
+			<GradientStop Offset="0" Color="#000000" />
+			<GradientStop Offset="1" Color="#FFFFFF" />
+		</LinearGradientBrush>
+
+		<converters:ThumbColorConverter x:Key="temperatureColorConverter"/>
+		<converters:ThumbColorConverter x:Key="thumbColorConverter"/>
+
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+
+		<Style Selector="Border.temperatureBorder">
+			<Setter Property="Background" Value="{StaticResource TemperatureBrush}"/>
+		</Style>
+
+		<Style Selector="Border.brightnessBorder">
+			<Setter Property="Background" Value="{StaticResource BrightnessBrush}"/>
+		</Style>
+
+	</UserControl.Styles>
+
+	<Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto, Auto, Auto" Margin="0,0,0,10" >
+
+		<Border Background="#000000" Opacity="0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="4" Name="mainBorder" IsHitTestVisible="True"/>
+
+		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+				   Text="{Binding Name, FallbackValue=N/A}" HorizontalAlignment="Center"
+				   FontWeight="DemiBold"
+				   VerticalAlignment="Center"
+				   IsHitTestVisible="False"
+				   />
+
+		<ToggleSwitch Command="{Binding Path=OnToggleCommand}"
+					  CommandParameter="{Binding Path=IsOn}"
+					  IsChecked="{Binding Path=IsOn}"
+					  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" OffContent="Power Off" OnContent="Power On" Margin="0,10,0,10"
+					  />
+
+		<TextBlock Grid.Row="2" Grid.Column="0" Text="Temperature:" Margin="0,10,10,0" IsHitTestVisible="False"/>
+
+		<Slider Classes="temperature" Grid.Row="2" Grid.Column="1" Margin="0,10,10,0"
+				Name="temperatureSlider"
+				Value="{Binding Path=Temperature, Mode=TwoWay}"
+				Minimum="{Binding Path=Configuration.MinTemperature, Mode=OneWay}"
+				Maximum="{Binding Path=Configuration.MaxTemperature, Mode=OneWay}"
+				MinWidth="200">
+
+			<Slider.Styles>
+
+				<Style Selector="Slider:horizontal">
+					<Setter Property="MinWidth" Value="40"/>
+					<Setter Property="MinHeight" Value="20"/>
+					<Setter Property="Template">
+						<ControlTemplate>
+							<Grid Name="grid">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto" MinHeight="20"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<Border Classes="temperatureBorder" Name="TrackBackground" Grid.Row="1" Height="4" Margin="6,0" VerticalAlignment="Center"/>
+								<Track Name="PART_Track" Grid.Row="1" Orientation="Horizontal">
+									<Thumb Name="thumb" MinWidth="20" MinHeight="20">
+										<Thumb.Template>
+											<ControlTemplate>
+												<Ellipse Width="18" Height="18" StrokeThickness="1" Stroke="LightGray">
+
+													<Ellipse.Fill>
+														<MultiBinding Converter="{StaticResource thumbColorConverter}">
+															<Binding ElementName="TrackBackground" Path="Background"/>
+															<Binding ElementName="temperatureSlider" Path="Minimum"/>
+															<Binding ElementName="temperatureSlider" Path="Maximum"/>
+															<Binding ElementName="temperatureSlider" Path="Value"/>
+														</MultiBinding>
+													</Ellipse.Fill>
+
+												</Ellipse>
+											</ControlTemplate>
+										</Thumb.Template>
+									</Thumb>
+								</Track>
+							</Grid>
+						</ControlTemplate>
+					</Setter>
+				</Style>
+
+			</Slider.Styles>
+
+		</Slider>
+
+		<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=Temperature, FallbackValue=N/A}" VerticalAlignment="Center" Margin="0,10,10,0" IsHitTestVisible="False" />
+
+		<TextBlock Grid.Row="3" Grid.Column="0" Text="Brightness:" Margin="0,10,10,0" IsHitTestVisible="False"/>
+
+		<Slider Classes="brightness" Grid.Row="3" Grid.Column="1" Value="{Binding Path=Brightness, Mode=TwoWay}"
+				Name="brightnessSlider"
+				Minimum="{Binding Path=Configuration.MinBrightness, Mode=OneWay}" Maximum="{Binding Path=Configuration.MaxBrightness, Mode=OneWay}"
+			Margin="0,10,10,0">
+
+			<Slider.Styles>
+
+				<Style Selector="Slider:horizontal">
+					<Setter Property="MinWidth" Value="40"/>
+					<Setter Property="MinHeight" Value="20"/>
+					<Setter Property="Template">
+						<ControlTemplate>
+							<Grid Name="grid">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="Auto" MinHeight="20"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<Border Classes="brightnessBorder" Name="TrackBackground" Grid.Row="1" Height="4" Margin="6,0" VerticalAlignment="Center"/>
+								<Track Name="PART_Track" Grid.Row="1" Orientation="Horizontal">
+									<Thumb Name="thumb" MinWidth="20" MinHeight="20">
+										<Thumb.Template>
+											<ControlTemplate>
+												<Ellipse Width="18" Height="18" StrokeThickness="1" Stroke="LightGray">
+													<Ellipse.Fill>
+														<MultiBinding Converter="{StaticResource thumbColorConverter}">
+															<Binding ElementName="TrackBackground" Path="Background"/>
+															<Binding ElementName="brightnessSlider" Path="Minimum"/>
+															<Binding ElementName="brightnessSlider" Path="Maximum"/>
+															<Binding ElementName="brightnessSlider" Path="Value"/>
+														</MultiBinding>
+													</Ellipse.Fill>
+												</Ellipse>
+											</ControlTemplate>
+										</Thumb.Template>
+									</Thumb>
+								</Track>
+							</Grid>
+						</ControlTemplate>
+					</Setter>
+				</Style>
+
+			</Slider.Styles>
+
+		</Slider>
+
+		<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=Brightness, FallbackValue=N/A}" VerticalAlignment="Center" Margin="0,10,10,0" IsHitTestVisible="False"/>
+
+	</Grid>
+
+</UserControl>

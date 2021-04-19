@@ -1,0 +1,87 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Elgator.UI.ViewModels"
+		xmlns:views="using:Elgator.UI.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Elgator.UI.Views.MainWindow"
+        Icon="/Assets/elgator.ico"
+        Title="Elgator"
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaToDecorationsHint="True"
+		CanResize="False"
+		SizeToContent="WidthAndHeight"
+		Name="mainWindow">
+
+	<Window.Styles>
+
+		<Style Selector="ListBox">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected:focus /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="ListBoxItem:selected:focus:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+
+		<Style Selector="Button:pointerover /template/ ContentPresenter">
+			<Setter Property="Background" Value="Red"/>
+		</Style>
+
+	</Window.Styles>
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+
+	<Grid ColumnDefinitions="*, Auto" Name="mainGrid">
+
+		<ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+				 Items="{Binding Path=Devices}"
+				  >
+
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<VirtualizingStackPanel Orientation="Vertical" />
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+
+			<ListBox.ItemTemplate>
+				<DataTemplate x:DataType="vm:DeviceViewModel" >
+					<views:DeviceView IsHitTestVisible="True" />
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<Button Grid.Row="0" Grid.Column="1"
+				Name="CloseButton"
+				VerticalAlignment="Top"
+				Height="20"
+				Width="20"
+				Background="red"
+				Padding="0" Margin="0,5,5,0" Opacity="0.3">
+
+		</Button>
+
+	</Grid>
+
+
+
+</Window>
