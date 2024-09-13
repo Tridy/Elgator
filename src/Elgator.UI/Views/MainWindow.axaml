@@ -54,8 +54,7 @@
 	<Grid ColumnDefinitions="*, Auto" Name="mainGrid">
 
 		<ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-				 Items="{Binding Path=Devices}"
-				  >
+				 ItemsSource="{Binding Path=Devices}">
 
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>

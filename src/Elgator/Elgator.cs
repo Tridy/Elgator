@@ -1,14 +1,15 @@
 ﻿using Refit;
 using System;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Elgator
 {
     public class Elgator : IDisposable
     {
-        private IElgato _elgato;
+        private readonly IElgato _elgato;
 
-        private Configuration _configuration;
+        private readonly Configuration _configuration;
 
         private System.Timers.Timer _timer;
 
@@ -21,6 +22,7 @@ namespace Elgator
         private Elgator(Configuration configuration)
         {
             _configuration = configuration;
+            _timer = new System.Timers.Timer();
             var refitSettings = new RefitSettings(new SystemTextJsonContentSerializer());
             _elgato = RestService.For<IElgato>(_configuration.Url, refitSettings);
         }
@@ -38,14 +40,15 @@ namespace Elgator
 
         private void StartTimer()
         {
-            _timer = new System.Timers.Timer();
+            _timer.Elapsed -= OnTimerTick;
+            _timer.Stop();
             _timer.Interval = _configuration.UpdateInMilliseconds;
             _timer.Elapsed += OnTimerTick;
             _timer.AutoReset = true;
             _timer.Start();
         }
 
-        private void OnTimerTick(object sender, EventArgs e)
+        private void OnTimerTick(object? sender, ElapsedEventArgs e)
         {
             if (_newBrightness != _currentBrightness)
             {
@@ -62,7 +65,7 @@ namespace Elgator
 
         public static Elgator FromConfiguration(Configuration configuration)
         {
-            return new Elgator(configuration?? throw new ArgumentNullException(nameof(configuration)));
+            return new Elgator(configuration ?? throw new ArgumentNullException(nameof(configuration)));
         }
 
         public async Task<AccessoryInfo> GetAccessoryInfo()
@@ -185,7 +188,6 @@ namespace Elgator
         {
             _timer?.Stop();
             _timer?.Dispose();
-            _elgato = null;
         }
     }
 }

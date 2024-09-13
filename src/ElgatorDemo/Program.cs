@@ -8,15 +8,25 @@ namespace ElgatoCommands
 {
     internal class Program
     {
-        private static Elgator.Elgator _elgator;
+        private static Elgator.Elgator? _elgator1;
 
-        private static Configuration _configuration;
+        private static Configuration? _configuration1;
+
+        private static Elgator.Elgator Elgator
+        {
+            get => _elgator1 ?? throw new NullReferenceException();
+        }
+        
+        private static Configuration Configuration
+        {
+            get => _configuration1 ?? throw new NullReferenceException();
+        }
 
         private static async Task Main(string[] args)
         {
-            _configuration = GetConfiguration();
+            _configuration1 = GetConfiguration();
 
-            using (_elgator = Elgator.Elgator.FromConfiguration(_configuration))
+            using (_elgator1 = global::Elgator.Elgator.FromConfiguration(Configuration))
             {
                 await Demo().ConfigureAwait(false);
             }
@@ -28,7 +38,7 @@ namespace ElgatoCommands
 
         private static async Task Demo()
         {
-            Elgator.AccessoryInfo info = await _elgator.GetAccessoryInfo().ConfigureAwait(false);
+            Elgator.AccessoryInfo info = await Elgator.GetAccessoryInfo().ConfigureAwait(false);
 
             Console.WriteLine("==========================================");
             Console.WriteLine($"{nameof(info.Product)}: {info.Product}");
@@ -40,7 +50,7 @@ namespace ElgatoCommands
             Console.WriteLine($"{nameof(info.Features)}: { string.Join(',', info.Features)}");
             Console.WriteLine("==========================================");
 
-            _elgator.Start();
+            Elgator.Start();
 
             await TurnOn().ConfigureAwait(false);
 
@@ -69,33 +79,33 @@ namespace ElgatoCommands
 
         private static async Task LoopBrightness()
         {
-            for (int i = _configuration.MinBrightness; i <= _configuration.MaxBrightness; i += 10)
+            for (int i = Configuration.MinBrightness; i <= Configuration.MaxBrightness; i += 10)
             {
-                _elgator.SetBrightness(i);
+                Elgator.SetBrightness(i);
                 await Task.Delay(200).ConfigureAwait(false);
             }
         }
 
         private static async Task TurnOff()
         {
-            await _elgator.SetOff().ConfigureAwait(false);
+            await Elgator.SetOff().ConfigureAwait(false);
         }
 
         private static async Task TurnOn()
         {
-            await _elgator.SetOn().ConfigureAwait(false);
+            await Elgator.SetOn().ConfigureAwait(false);
         }
 
         private static async Task LoopTemperature()
         {
-            for (int i = _configuration.MinTemperature; i < _configuration.MaxTemperature; i += 10)
+            for (int i = Configuration.MinTemperature; i < Configuration.MaxTemperature; i += 10)
             {
-                if (i == _configuration.MaxTemperature - 1)
+                if (i == Configuration.MaxTemperature - 1)
                 {
-                    i = _configuration.MaxTemperature;
+                    i = Configuration.MaxTemperature;
                 }
 
-                _elgator.SetTemperature(i);
+                Elgator.SetTemperature(i);
 
                 await Task.Delay(100).ConfigureAwait(false);
             }

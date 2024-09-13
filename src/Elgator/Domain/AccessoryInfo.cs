@@ -24,5 +24,14 @@ namespace Elgator
 
         [JsonPropertyName("features")]
         public string[] Features { get; set; }
+
+        public AccessoryInfo()
+        {
+            Product = "n/a";
+            FirmwareVersion = "n/a";
+            SerialNumber = "n/a";
+            Name = "n/a";
+            Features = new string[0];
+        }
     }
 }

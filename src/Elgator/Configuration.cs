@@ -15,6 +15,11 @@ namespace Elgator
 
         public int UpdateInMilliseconds { get; set; }
 
+        public Configuration()
+        {
+            Url = "n/a";
+        }
+
         public static IEnumerable<Configuration> FromConfiguration(IConfiguration configuration)
         {
             var configurations = new List<Configuration>();
@@ -25,12 +30,12 @@ namespace Elgator
             {
                 var c = new Configuration
                 {
-                    Url = configuration[$"settings:{i}:Url"],
-                    MinBrightness = int.Parse(configuration[$"settings:{i}:MinBrightness"]),
-                    MaxBrightness = int.Parse(configuration[$"settings:{i}:MaxBrightness"]),
-                    MinTemperature = int.Parse(configuration[$"settings:{i}:MinTemperature"]),
-                    MaxTemperature = int.Parse(configuration[$"settings:{i}:MaxTemperature"]),
-                    UpdateInMilliseconds = int.Parse(configuration[$"settings:{i}:UpdateInMilliseconds"])
+                    Url = configuration[$"settings:{i}:Url"]!,
+                    MinBrightness = int.Parse(configuration[$"settings:{i}:MinBrightness"]!),
+                    MaxBrightness = int.Parse(configuration[$"settings:{i}:MaxBrightness"]!),
+                    MinTemperature = int.Parse(configuration[$"settings:{i}:MinTemperature"]!),
+                    MaxTemperature = int.Parse(configuration[$"settings:{i}:MaxTemperature"]!),
+                    UpdateInMilliseconds = int.Parse(configuration[$"settings:{i}:UpdateInMilliseconds"]!)
                 };
 
                 i++;

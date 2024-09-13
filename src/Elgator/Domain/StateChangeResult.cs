@@ -9,6 +9,12 @@ namespace Elgator
 
         [JsonPropertyName("lights")]
         public Light[] Lights { get; set; }
+
+        public StateChangeResult(Light[] lights)
+        {
+            Lights = lights;
+            NumberOfLights = 0;
+        }
     }
 
     public class Light
@@ -21,5 +27,12 @@ namespace Elgator
 
         [JsonPropertyName("temperature")]
         public int Temperature { get; set; }
+
+        public Light()
+        {
+            IsOn = 0;
+            Brightness = 0;
+            Temperature = 0;
+        }
     }
 }

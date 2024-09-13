@@ -10,5 +10,11 @@ namespace Elgator
 
         [JsonPropertyName("lights")]
         public T[] Changes { get; set; }
+
+        public StateInfo()
+        {
+            NumberOfLights = 0;
+            Changes = new T[0];
+        }
     }
 }

@@ -3,7 +3,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Elgator.UI.Views
 {
-    public class DeviceView : UserControl
+    public partial class DeviceView : UserControl
     {
         public DeviceView()
         {
@@ -19,9 +19,9 @@ namespace Elgator.UI.Views
 
         private void AddWindowMouseDragHandling()
         {
-            this.FindControl<Border>("mainBorder").PointerPressed += (i, e) =>
+            this.FindControl<Border>("mainBorder")!.PointerPressed += (i, e) =>
             {
-                Connector.HostWindow?.PlatformImpl?.BeginMoveDrag(e);
+                // TODO: Connector.HostWindow?.PlatformImpl?.BeginMoveDrag(e);
             };
         }
     }
