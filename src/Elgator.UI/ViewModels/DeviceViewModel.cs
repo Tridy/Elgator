@@ -1,56 +1,28 @@
 ﻿using DynamicData.Binding;
-using ReactiveUI;
+
 using System;
-using System.Reactive;
-using System.Threading.Tasks;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
+using ReactiveUI.Fody.Helpers;
 
 namespace Elgator.UI.ViewModels
 {
     public class DeviceViewModel : ViewModelBase, IDisposable
     {
-        private string _name = "N/A";
-        private int _brightness = 50;
-        private int _temperature = 200;
-        private bool _isOn = false;
-
         private Elgator _elgator;
+        
+        [Reactive]
+        private string Name { get; set; }
 
-        public string Name => _name;
+        [Reactive]
+        private bool IsOn { get; set; }
 
-        public ReactiveCommand<bool, Unit> OnCommand { get; }
-
-        public bool IsOn
-        {
-            get => _isOn;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _isOn, value);
-            }
-        }
-
-        public int Brightness
-        {
-            get
-            {
-                return _brightness;
-            }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _brightness, value);
-            }
-        }
-
-        public int Temperature
-        {
-            get
-            {
-                return _temperature;
-            }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _temperature, value);
-            }
-        }
+        [Reactive] 
+        private int Brightness { get; set; }
+        
+        [Reactive] 
+        private int Temperature { get; set; }
 
         public Configuration Configuration { get; set; }
 
@@ -66,15 +38,13 @@ namespace Elgator.UI.ViewModels
             _elgator = Elgator.FromConfiguration(configuration);
 
             var info = _elgator.GetAccessoryInfo().ConfigureAwait(false).GetAwaiter().GetResult();
-            _name = info.Name;
+            Name = info.Name;
 
             var startingState = _elgator.GetState().ConfigureAwait(false).GetAwaiter().GetResult();
 
-            _isOn = startingState.Lights[0].IsOn == 1;
-            _brightness = startingState.Lights[0].Brightness;
-            _temperature = startingState.Lights[0].Temperature;
-
-            OnCommand = ReactiveCommand.CreateFromTask<bool, Unit>(OnToggleCommand);
+            IsOn = startingState.Lights[0].IsOn == 1;
+            Brightness = startingState.Lights[0].Brightness;
+            Temperature = startingState.Lights[0].Temperature;
 
             SubscribeToChanges();
 
@@ -94,20 +64,19 @@ namespace Elgator.UI.ViewModels
                 {
                     _elgator.SetBrightness(changed.Value);
                 });
-        }
 
-        private async Task<Unit> OnToggleCommand(bool isOn)
-        {
-            if (isOn)
-            {
-                await _elgator.SetOn().ConfigureAwait(false);
-            }
-            else
-            {
-                await _elgator.SetOff().ConfigureAwait(false);
-            }
-
-            return Unit.Default;
+            this.WhenPropertyChanged(x => x.IsOn, notifyOnInitialValue: false)
+                .Subscribe(isOn =>
+                {
+                    if (isOn.Value)
+                    {
+                        _elgator.SetOn().ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        _elgator.SetOff().ConfigureAwait(false);
+                    }
+                });
         }
 
         public void Dispose()

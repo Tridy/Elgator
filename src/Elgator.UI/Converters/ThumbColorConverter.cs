@@ -13,14 +13,14 @@ namespace Elgator.UI.Converters
         {
             if (values == null || values.Count() != 4)
             {
-                return new SolidColorBrush(Colors.Red);
+                return new SolidColorBrush(Colors.Pink);
             }
 
             var brush = values[0] as LinearGradientBrush;
 
             if (brush == null)
             {
-                return new SolidColorBrush(Colors.Red);
+                return new SolidColorBrush(Colors.Orange);
             }
 
             Color startColor = brush.GradientStops[0].Color;
