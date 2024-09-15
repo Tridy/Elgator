@@ -57,6 +57,8 @@
         <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=Brightness, FallbackValue=N/A}"
                    VerticalAlignment="Center" Margin="0,10,10,0" IsHitTestVisible="False" />
 
+        <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource TemperatureBrush}"  Height="5" Width="{Binding ElementName=temperatureSlider, Path=Width}" Margin="0,10,10,0" />
+        
         <Slider Grid.Row="2" Grid.Column="1" Margin="0,10,10,0"
                 Name="temperatureSlider"
                 Value="{Binding Path=Temperature, Mode=TwoWay}"
@@ -69,8 +71,7 @@
 
                     <Style Selector="^ Track">
                         <Style Selector="^ RepeatButton Border">
-                            <Setter Property="CornerRadius" Value="0" />
-                            <Setter Property="Height" Value="6" />
+                            <Setter Property="Background" Value="Transparent" />
                         </Style>
 
                         <Style Selector="^ Thumb">
@@ -92,11 +93,11 @@
                     </Style>
 
                     <Style Selector="^ RepeatButton#PART_DecreaseButton">
-                        <Setter Property="Background" Value="{StaticResource TemperatureBrush}" />
+                        <Setter Property="Background" Value="Transparent" />
                     </Style>
 
                     <Style Selector="^ RepeatButton#PART_IncreaseButton">
-                        <Setter Property="Background" Value="{StaticResource TemperatureBrush}" />
+                        <Setter Property="Background" Value="Transparent" />
                     </Style>
 
                 </Style>
@@ -105,6 +106,7 @@
 
         </Slider>
 
+        <Border Grid.Row="3" Grid.Column="1" Background="{StaticResource BrightnessBrush}"  Height="5" Width="{Binding ElementName=brightnessSlider, Path=Width}" Margin="0,10,10,0" />
 
         <Slider Grid.Row="3" Grid.Column="1" Value="{Binding Path=Brightness, Mode=TwoWay}"
                 Name="brightnessSlider"
@@ -140,11 +142,11 @@
                     </Style>
 
                     <Style Selector="^ RepeatButton#PART_DecreaseButton">
-                        <Setter Property="Background" Value="{StaticResource BrightnessBrush}" />
+                        <Setter Property="Background" Value="Transparent" />
                     </Style>
 
                     <Style Selector="^ RepeatButton#PART_IncreaseButton">
-                        <Setter Property="Background" Value="{StaticResource BrightnessBrush}" />
+                        <Setter Property="Background" Value="Transparent" />
                     </Style>
 
                 </Style>
