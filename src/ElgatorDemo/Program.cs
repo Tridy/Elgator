@@ -25,15 +25,43 @@ namespace ElgatoCommands
         private static async Task Main(string[] args)
         {
             _configuration1 = GetConfiguration();
-
+            
             using (_elgator1 = global::Elgator.Elgator.FromConfiguration(Configuration))
             {
+                if (await ProcessParametersAsync(args))
+                {
+                    return;
+                }
+                
                 await Demo().ConfigureAwait(false);
             }
 
             Console.WriteLine("Any key to exit.");
 
             Console.ReadKey();
+        }
+
+        private static async Task<bool> ProcessParametersAsync(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                return false;
+            }
+
+            if (args[0] == "--set-off")
+            {
+                await TurnOff().ConfigureAwait(false);
+                return true;
+            }
+            
+            if (args[0] == "--set-on")
+            {
+                await TurnOn().ConfigureAwait(false);
+                return true;
+            }
+
+            return false;
+
         }
 
         private static async Task Demo()
